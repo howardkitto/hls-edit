@@ -38,6 +38,7 @@ class HLSPlayer extends React.Component {
     this.destroyPlayer();
 
     const { url, autoplay, hlsConfig } = props;
+
     const { videoRef } = this;
     const hls = new Hls(hlsConfig);
 

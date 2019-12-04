@@ -13,6 +13,7 @@ class VideoEdit extends React.Component {
     </h1>
       <HLS
         url= "https://prospelling.s3-us-west-2.amazonaws.com/video/Test4/playlist.m3u8"
+        hlsConfig = {{enableWorker: false }}
       />
     </div>)
   }
