@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import VideoEdit from './components/VideoEdit'
+import VideoEdit from './components/Home'
 
 
 function App() {
