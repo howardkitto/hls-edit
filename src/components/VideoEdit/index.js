@@ -34,21 +34,33 @@ const VideoEdit = () => {
                 const segments = m3u8.getManifestSegments(manifestInfo, manifest);
     
                 console.log(`Developer info: ${segments.length} segment size.`);
-    
-                // this.setState({
+                    
                   setIsManifestLoaded(true)
                   setIsManifestLoading(false)
                   setSegments(segments)
-                  setSelectedSegments([])
-                // });
+                  setSelectedSegments([])    
               });
           });
         }
     })
 
-   
-
     let playerRef = React.createRef();
+
+    const handleClickBtnAddBestBit =() => {
+        const { videoRef } = playerRef.current;
+        const { currentTime } = videoRef;
+        // const { segments, selectedSegments } = this.state;
+    
+        const closestSegment = m3u8.getClosestSegmentByTime(segments, currentTime);
+        closestSegment.label = selectedSegments.length + 1;
+    
+        let s = selectedSegments
+        s.push(closestSegment);
+        setSelectedSegments(s)
+    
+        setSelectedSegments({ selectedSegments });
+      }
+
 
     return <div>
 
@@ -60,6 +72,7 @@ const VideoEdit = () => {
         />
         <input id="url" onChange={e => setUrlString(e.target.value)} />
         <button onClick={e=>setUrl(urlString)}>Load Video</button>
+        <button onClick={e=>{handleClickBtnAddBestBit()}}>Add Best Bit</button>
     </div>
 
 }
