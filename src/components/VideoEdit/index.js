@@ -1,10 +1,52 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import HLS from '../HLSPlayer/HLSPlayer';
+import m3u8 from "./m3u8"
+// https://prospelling.s3-us-west-2.amazonaws.com/video/Test4/playlist.m3u8
 
+//https://player.vimeo.com/external/337448540.m3u8?s=317f54e1622ff7a47377701d0ad87fd5a5bd1175&oauth2_token_id=1121238946
 
 const VideoEdit = () => {
 
-    const [url, setUrl] = useState(["https://prospelling.s3-us-west-2.amazonaws.com/video/Test4/playlist.m3u8"]);
+    const [urlString, setUrlString] = useState("")
+    const [url, setUrl] = useState("")
+    const [video, setVideo] = useState({})
+    const [isManifestLoading, setIsManifestLoading] = useState(false)
+    const [isManifestLoaded, setIsManifestLoaded] = useState(false)
+    const [segments, setSegments] = useState([])
+    const [selectedSegments, setSelectedSegments] = useState([])
+
+
+    useEffect(()=>{
+
+        if (!isManifestLoaded && !isManifestLoading && video && video.video) {
+          this.setState({
+            isManifestLoading: true,
+          }, () => {
+            const manifestInfo = m3u8.getManifestFileInfo(url);
+    
+            if (!manifestInfo) {
+              return;
+            }
+    
+            m3u8
+              .getVideoManifest(manifestInfo.contentUrl)
+              .then((manifest) => {
+                const segments = m3u8.getManifestSegments(manifestInfo, manifest);
+    
+                console.log(`Developer info: ${segments.length} segment size.`);
+    
+                // this.setState({
+                  setIsManifestLoaded(true)
+                  setIsManifestLoading(false)
+                  setSegments(segments)
+                  setSelectedSegments([])
+                // });
+              });
+          });
+        }
+    })
+
+   
 
     let playerRef = React.createRef();
 
@@ -12,12 +54,12 @@ const VideoEdit = () => {
 
         <HLS
             ref={playerRef}
-            url={"https://prospelling.s3-us-west-2.amazonaws.com/video/Test4/playlist.m3u8"}
-            autoplay = {false}
+            url={url}
+            autoplay={true}
             hlsConfig={{ enableWorker: false }}
         />
-        <input id="url"/>
-        <button onClick={setUrl}>Load Video</button>
+        <input id="url" onChange={e => setUrlString(e.target.value)} />
+        <button onClick={e=>setUrl(urlString)}>Load Video</button>
     </div>
 
 }
